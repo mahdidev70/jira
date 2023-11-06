@@ -1,0 +1,59 @@
+version: '3.3'
+services:
+  jira:
+    build: .
+    image: zeeplay-jira:9.5.0
+    container_name: jira
+    env_file:
+      - .env.jira
+    volumes:
+      - jira-application-data:/var/atlassian/application-data/jira
+      - ./jira/server.xml.j2:/opt/atlassian/etc/server.xml.j2
+      - ./jira/jira-config.properties:/var/atlassian/application-data/jira/jira-config.properties
+    expose:
+      - "8080"
+    networks:
+      - zeeplay-workspace
+  postgres:
+    image: postgres:12.2
+    container_name: atlassian_db
+    expose:
+      - "5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - .env.postgres
+    networks:
+      - zeeplay-workspace
+  nginx:
+    image: nginx:1.15.3
+    container_name: atlassian_nginx
+    ports:
+      - "80:80"
+      - "4143:4143"
+    networks:
+      - zeeplay-workspace
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./log/nginx/:/var/log/nginx/
+  zeeplay_proxy:
+    image: ubuntu/squid
+    container_name: zeeplay_proxy
+    ports:
+      - "7071:3128"
+    volumes:
+      - ./proxy/squid.conf:/etc/squid/squid.conf
+      - ./proxy/passwords:/etc/squid/passwords
+    restart: always
+    networks:
+      - zeeplay-workspace
+        
+networks:
+  zeeplay-workspace:
+    external:
+      name: zeeplay-workspace
+
+volumes:
+  jira-application-data:
+  postgres-data:
