@@ -34,7 +34,7 @@ services:
      - confluence 
      - bitbucket 
     ports: 
-     - "80:80" 
+     - "4143:80" 
     networks: 
       default: 
         aliases:
