@@ -1,6 +1,6 @@
 server {
     listen 4143;
-    server_name jira.zeeplay.ir;
+    server_name jira.diginext.ir;
     location / {
         proxy_set_header X-Forwarded-Host $host;
         proxy_set_header X-Forwarded-Server $host;
