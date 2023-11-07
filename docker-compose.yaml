@@ -13,7 +13,7 @@ services:
     expose:
       - "8080"
     networks:
-      - zeeplay-workspace
+      - jira-network
   postgres:
     image: postgres:12.2
     container_name: atlassian_db
@@ -24,7 +24,7 @@ services:
     env_file:
       - .env.postgres
     networks:
-      - zeeplay-workspace
+      - jira-network
   nginx:
     image: nginx:1.15.3
     container_name: atlassian_nginx
@@ -32,7 +32,7 @@ services:
       - "80:80"
       - "4143:4143"
     networks:
-      - zeeplay-workspace
+      - jira-network
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/conf.d:/etc/nginx/conf.d
@@ -47,12 +47,11 @@ services:
       - ./proxy/passwords:/etc/squid/passwords
     restart: always
     networks:
-      - zeeplay-workspace
+      - jira-network
         
 networks:
-  zeeplay-workspace:
-    external:
-      name: zeeplay-workspace
+  jira-network:
+      name: jira-network
 
 volumes:
   jira-application-data:
