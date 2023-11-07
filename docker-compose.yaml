@@ -29,7 +29,7 @@ services:
     image: nginx:1.15.3
     container_name: atlassian_nginx
     ports:
-      - "80:80"
+      - "8562:80"
       - "4143:4143"
     networks:
       - jira-network
